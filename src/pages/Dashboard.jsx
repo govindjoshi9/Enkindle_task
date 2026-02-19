@@ -9,7 +9,6 @@ const Dashboard = () => {
     const logout = useAuthStore((state) => state.logout);
     const queryClient = useQueryClient();
 
-    // Fetch Workflows
     const { data: workflows, isLoading, isError, error } = useQuery({
         queryKey: ['workflows'],
         queryFn: async () => {
@@ -18,10 +17,8 @@ const Dashboard = () => {
         },
     });
 
-    // Create Workflow Mutation
     const createMutation = useMutation({
         mutationFn: async () => {
-            // Default payload as requested
             const newWorkflow = {
                 name: "Untitled Workflow",
                 data: { nodes: [], edges: [] }
@@ -31,12 +28,10 @@ const Dashboard = () => {
         },
         onSuccess: (data) => {
             queryClient.invalidateQueries(['workflows']);
-            // Optional: Navigate to editor immediately
             navigate(`/editor/${data._id}`);
         },
     });
 
-    // Delete Workflow Mutation
     const deleteMutation = useMutation({
         mutationFn: async (id) => {
             await api.delete(`/workflows/${id}`);
@@ -56,7 +51,7 @@ const Dashboard = () => {
     };
 
     const handleDelete = (id, e) => {
-        e.preventDefault(); // Prevent link navigation if inside a link (though here it's separate)
+        e.preventDefault(); 
         if (window.confirm('Are you sure you want to delete this workflow?')) {
             deleteMutation.mutate(id);
         }
@@ -105,7 +100,6 @@ const Dashboard = () => {
 
             {/* Main Content */}
             <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-                {/* Actions Bar */}
                 <div className="flex justify-end mb-6">
                     <button
                         onClick={handleCreate}
